@@ -21,6 +21,11 @@ const getProduct = async (_, { _id }) => {
   return result;
 };
 
+const getProductCount = async () => {
+	const result = await db.getInventory().aggregate([{'$count': 'count'}]).toArray()
+	return result[0].count;
+}
+
 const addProduct = async (_, {
   Category, Price, Name, Image,
 }) => {
@@ -61,5 +66,5 @@ const deleteProduct = async (_, { _id }) => {
 };
 
 module.exports = {
-  productList, getProduct, addProduct, updateProduct, deleteProduct,
+  productList, getProduct, addProduct, updateProduct, deleteProduct, getProductCount
 };

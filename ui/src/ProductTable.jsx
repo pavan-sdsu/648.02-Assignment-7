@@ -12,7 +12,7 @@ export default class ProductTable extends Component {
 		const rows = this.props.products.map(p => <ProductRow product={p} key={p.id} deleteProduct={this.props.deleteProduct} />)
 		return (
 			<section>
-				<p>Showing all available products</p>
+				<p>Showing {this.props.productCount} available products</p>
 				<hr />
 				<Table striped bordered hover>
 					<thead>

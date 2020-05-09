@@ -9,11 +9,13 @@ class ProductList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			products: []
+			products: [],
+			productCount: 0
 		}
 		this.addProduct = this.addProduct.bind(this);
 		this.deleteProduct = this.deleteProduct.bind(this);
 		this.getProducts()
+		this.getProductCount()
 	}
 
 	getProducts() {
@@ -34,6 +36,18 @@ class ProductList extends Component {
 		.then((res) => {
 			this.setState((state, props) => {
 				state.products = res.data.productList;
+				return state;
+			})
+		})
+		.catch(err => console.error(err))
+	}
+
+	getProductCount() {
+		const query = `{ getProductCount }`
+		graphQLFetch(query)
+		.then((res) => {
+			this.setState((state, props) => {
+				state.productCount = res.data.getProductCount
 				return state;
 			})
 		})
@@ -63,6 +77,7 @@ class ProductList extends Component {
 		.then((res) => {
 			this.setState((state, props) => {
 				state.products.push(res.data.addProduct);
+				this.getProductCount();
 				this.props.showToast("success", "Product Added Successfully")
 				return state;
 			})
@@ -78,6 +93,7 @@ class ProductList extends Component {
 			if (res.data.deleteProduct) {
 				this.props.showToast("danger", "Product Deleted Successfully")				
 				this.getProducts();
+				this.getProductCount();
 			}
 		})
 		.catch(err => console.error(err))
@@ -88,7 +104,7 @@ class ProductList extends Component {
 		return (
 			<Fragment>
 				<h2>My Company Inventory</h2>
-				<ProductTable products={this.state.products} deleteProduct={this.deleteProduct} />
+				<ProductTable products={this.state.products} deleteProduct={this.deleteProduct} productCount={this.state.productCount} />
 				<ProductAdd addProduct={this.addProduct} />
 			</Fragment>
 		)
